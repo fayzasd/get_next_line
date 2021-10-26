@@ -6,7 +6,7 @@
 /*   By: fasad <fasad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 17:34:43 by fasad             #+#    #+#             */
-/*   Updated: 2021/10/25 18:49:04 by fasad            ###   ########.fr       */
+/*   Updated: 2021/10/26 14:59:51 by fasad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,22 @@ int str_scan(char *str)
 	return -1;
 }
 
+char *gnlchr(char *str)
+{
+	int i;
+	
+	while(*str)
+	{
+		if(*str == '\n')
+			break;
+		str++;
+	}
+	str++;
+	return str;
+}
+
+
+
 char *get_next_line(int fd)
 {
 	int i;
@@ -41,20 +57,29 @@ char *get_next_line(int fd)
 	if (fd < 0)
 		return NULL;
 	i = read(fd, buf, BUFFER_SIZE);
-	while (final)
-		buf = ft_strjoin(buf, final);
+	if (*final)
+		temp = ft_strjoin(temp, final);
 	if (str_scan(buf) >= 0)
-		return ft_substr(buf, 0, str_scan(buf) + 1);
-	final = ft_strdup(buf);
-	while (str_scan(buf) == -1)
+		{
+			final = ft_strdup(gnlchr(buf));
+			return ft_substr(buf, 0, str_scan(buf) + 1);
+		}
+	else
 	{
-		i = read(fd, buf, BUFFER_SIZE);
-		temp = ft_strjoin(temp, buf);
+		temp = ft_strdup(buf);
+		while (str_scan(buf) == -1 )
+		{
+			i = read(fd, buf, BUFFER_SIZE);
+			temp = ft_strjoin(temp, buf);
+		}
+		if(str_scan(temp) >= 0)
+			{
+				final = ft_strdup(gnlchr(temp));
+				temp = ft_substr(temp, 0, str_scan(temp) + 1);
+			}
+		//buf = ft_strdup(temp);
+		return temp;
 	}
-	if(str_scan(buf) >= 0)
-		final = ft_strrchr(buf, '\n');
-	buf = ft_strdup(temp);
-	return buf;
 }
 
 int main()
@@ -62,8 +87,8 @@ int main()
 	int fd = open("test.txt",O_RDONLY);
 	char *str = get_next_line(fd);
 	printf("str1 - %s",str);
-	//	str = get_next_line(fd);
-	//	printf("str2 - %s",str);
+	str = get_next_line(fd);
+	printf("str2 - %s",str);
 	// str = get_next_line(fd);
 	// printf("str2 - %s",str);
 }
