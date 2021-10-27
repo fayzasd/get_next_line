@@ -6,7 +6,7 @@
 /*   By: fasad <fasad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 17:14:12 by fasad             #+#    #+#             */
-/*   Updated: 2021/10/25 18:14:36 by fasad            ###   ########.fr       */
+/*   Updated: 2021/10/27 16:21:04 by fasad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	j = 0;
 	k = 0;
-	if (!s1 || !s2)
+	if (!s1 && !s2)
 		return (NULL);
+	if (!s1)
+		return ((char *)s2);
 	str = (char *)malloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
 	if (str == NULL)
 		return (0);
@@ -47,21 +49,21 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
-char	*ft_strrchr(const char *str, int c)
-{
-	int	i;
+// char	*ft_strrchr(const char *str, int c)
+// {
+// 	int	i;
 
-	i = ft_strlen((char *)str);
-	while (i >= 0)
-	{
-		if (str[i] == (char)c)
-			return ((char *)&str[i]);
-		i--;
-	}
-	if (str[ft_strlen(str)] == (char)c)
-		return ((char *)&str[ft_strlen(str)]);
-	return (0);
-}
+// 	i = ft_strlen((char *)str);
+// 	while (i >= 0)
+// 	{
+// 		if (str[i] == (char)c)
+// 			return ((char *)&str[i]);
+// 		i--;
+// 	}
+// 	if (str[ft_strlen(str)] == (char)c)
+// 		return ((char *)&str[ft_strlen(str)]);
+// 	return (0);
+// }
 
 static size_t	count_check(char const *s, unsigned int start, size_t len)
 {

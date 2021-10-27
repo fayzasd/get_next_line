@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fasad <fasad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/25 17:34:43 by fasad             #+#    #+#             */
-/*   Updated: 2021/10/26 14:59:51 by fasad            ###   ########.fr       */
+/*   Created: 2021/10/27 10:19:01 by fasad             #+#    #+#             */
+/*   Updated: 2021/10/27 18:51:05 by fasad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,67 +28,90 @@ int str_scan(char *str)
 }
 
 char *gnlchr(char *str)
-{
+{	
 	int i;
-	
-	while(*str)
+
+	i = 0;
+	while(str[i])
 	{
-		if(*str == '\n')
+		if(str[i] == '\n')
 			break;
-		str++;
+		i++;
 	}
-	str++;
-	return str;
+	i++;
+	return &str[i];
 }
 
+char *gnl_substr(char *str, int i)
+{
+	int j;
+	char *trim;
 
+	j = 0;
+	trim = malloc(i + 1);
+	while (j < i)
+	{
+		trim[j] = *str;
+		j++;
+		str++;
+	}
+	trim[j] = '\0';
+	return trim;
+}
 
 char *get_next_line(int fd)
 {
 	int i;
-	int j;
+	char *str;
 	char *buf;
-	char *temp;
 	static char *final;
-
-	i = 0;
+	
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return NULL;
 	buf = malloc(BUFFER_SIZE);
-	temp = malloc(BUFFER_SIZE);
-	if (fd < 0)
+	str = malloc(BUFFER_SIZE);
+	if (!str || !buf)
 		return NULL;
 	i = read(fd, buf, BUFFER_SIZE);
-	if (*final)
-		temp = ft_strjoin(temp, final);
+	if (*buf == '\0')
+		return NULL;
+	str = ft_strjoin(final, str);
 	if (str_scan(buf) >= 0)
-		{
+	{	
+		 if ((int)ft_strlen(buf) > str_scan(buf))
 			final = ft_strdup(gnlchr(buf));
-			return ft_substr(buf, 0, str_scan(buf) + 1);
-		}
+		return gnl_substr(buf, str_scan(buf) + 1);
+	}
 	else
 	{
-		temp = ft_strdup(buf);
-		while (str_scan(buf) == -1 )
+		str = ft_strjoin(str, buf);
+		while (i > 0)
 		{
 			i = read(fd, buf, BUFFER_SIZE);
-			temp = ft_strjoin(temp, buf);
-		}
-		if(str_scan(temp) >= 0)
+			if	(i != 0)
+			 	str = ft_strjoin(str, buf);	
+			if (str_scan(buf) >= 0)
 			{
-				final = ft_strdup(gnlchr(temp));
-				temp = ft_substr(temp, 0, str_scan(temp) + 1);
+				 if ((int)ft_strlen(buf) > str_scan(buf))
+					final = ft_strdup(gnlchr(buf));	
+				break;
 			}
-		//buf = ft_strdup(temp);
-		return temp;
+			
+		}
 	}
+	return str;
 }
 
-int main()
-{
-	int fd = open("test.txt",O_RDONLY);
-	char *str = get_next_line(fd);
-	printf("str1 - %s",str);
-	str = get_next_line(fd);
-	printf("str2 - %s",str);
-	// str = get_next_line(fd);
-	// printf("str2 - %s",str);
-}
+// int main()
+// {
+// 	int fd = open("test.txt",O_RDONLY);
+// 	close(fd);
+// 	char *str = get_next_line(fd);
+// 	printf("str1 - %s",str);
+// 	// str = get_next_line(fd);
+// 	// printf("str2 - %s",str);
+// 	// str = get_next_line(fd);
+// 	// printf("str2 - %s",str);
+// 	// str = get_next_line(fd);
+	
+// }
