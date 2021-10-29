@@ -81,15 +81,15 @@ char *get_save(char *save)
 char *get_next_line(int fd)
 {
 	char		*str;
-	static char	*save;
+	static char	*save[10240];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	save = get_nl(fd, save);
-	if (!save)
+	save[fd] = get_nl(fd, save[fd]);
+	if (!save[fd])
 		return (NULL);
-	str = get_str(save);
-	save = get_save(save);
+	str = get_str(save[fd]);
+	save[fd] = get_save(save[fd]);
 	return (str);
 }
 
