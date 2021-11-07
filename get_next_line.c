@@ -1,15 +1,15 @@
 #include "get_next_line.h"
 
-char *get_nl(int fd, char *save)
+char	*get_nl(int fd, char *save)
 {
 	char	*buf;
-	int	i;
+	int		i;
 
-	buf = malloc((BUFFER_SIZE + 1)*(sizeof(char)));
-	i = 1;
+	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
 		return (NULL);
-	while (!ft_strchr(buf, '\n') && i != 0)
+	i = 1;
+	while (!ft_strchr(save, '\n') && i != 0)
 	{
 		i = read(fd, buf, BUFFER_SIZE);
 		if (i == -1)
@@ -24,10 +24,10 @@ char *get_nl(int fd, char *save)
 	return (save);
 }
 
-char *get_str(char *save)
+char	*get_str(char *save)
 {
 	char	*str;
-	int	i;
+	int		i;
 
 	i = 0;
 	if (!save[i])
@@ -36,7 +36,7 @@ char *get_str(char *save)
 		i++;	
 	str = (char *)malloc(sizeof(char) * (i + 2));
 	if (!str)
-		return(NULL);
+		return (NULL);
 	i = 0;
 	while (save[i] && save[i] != '\n')
 	{
@@ -52,11 +52,11 @@ char *get_str(char *save)
 	return (str);
 }
 
-char *get_save(char *save)
+char	*get_save(char *save)
 {
-	char *str;
-	int i;
-	int j;
+	char	*str;
+	int		i;
+	int		j;
 
 	i = 0;
 	while (save[i] && save[i] != '\n')
@@ -78,13 +78,13 @@ char *get_save(char *save)
 	return (str);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	char		*str;
+	char				*str;
 	static char	*save;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (0);
+		return (NULL);
 	save = get_nl(fd, save);
 	if (!save)
 		return (NULL);
@@ -93,17 +93,17 @@ char *get_next_line(int fd)
 	return (str);
 }
 
-#include <stdio.h>
+// #include <stdio.h>
 
 // int main()
 // {
 // 	int fd = open("test.txt",O_RDONLY);
 // 	char *str = get_next_line(fd);
-// 	printf("%s",str);
-// 	// str = get_next_line(fd);
-// 	// printf("str2 - %s",str);
-// 	// str = get_next_line(fd);
-// 	// printf("str2 - %s",str);
-// 	// str = get_next_line(fd);
-	
+// 	printf("str - %s",str);
+// 	str = get_next_line(fd);
+// 	printf("str2 - %s",str);
+// 	str = get_next_line(fd);
+// 	printf("str3 - %s",str);
+// 	str = get_next_line(fd);
+// 	printf("str4 - %s",str);
 // }
